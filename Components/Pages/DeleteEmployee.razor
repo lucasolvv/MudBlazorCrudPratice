@@ -1,4 +1,6 @@
 ﻿@using MudBlazor
+@using MUDCRUD.Components.Services
+@inject IEmployeeService EmployeeService;
 @inject ISnackbar Snackbar;
 @inject IDialogService DialogService;
 
@@ -24,4 +26,22 @@
 @code {
     [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
     [Parameter] public Guid EmployeeId { get; set; }
+    [Parameter] public string Message { get; set; }
+
+    private void Cancel() => MudDialog.Cancel();
+    
+    private async Task Submit()
+    {
+        try
+        {
+            // Call the service to delete the employee
+            await EmployeeService.DeleteEmployeeAsync(EmployeeId);
+            Snackbar.Add("Employee deleted successfully!", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error deleting employee: {ex.Message}", Severity.Error);
+        }
+    }
 }
