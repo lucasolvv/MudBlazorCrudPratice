@@ -64,6 +64,8 @@ namespace MUDCRUD.Components.Services
             employee.Gender = contract.Gender;
             employee.UpdatedAt = DateTime.UtcNow;
 
+            _context.Employees.Update(employee);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteEmployeeAsync(Guid id)
